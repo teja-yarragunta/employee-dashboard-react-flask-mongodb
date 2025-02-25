@@ -1,5 +1,5 @@
 import { Grid } from '@chakra-ui/react'
-import { USERS } from '../dummy/dummy.js'
+import { USERS } from '../dummy/dummy'
 import React from 'react'
 import UserCard from './UserCard'
 

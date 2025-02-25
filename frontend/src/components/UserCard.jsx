@@ -1,6 +1,7 @@
 import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, IconButton, 
     Text } from "@chakra-ui/react";
 import { BiTrash } from "react-icons/bi";
+import EditModal from "./EditModal";
 
 const UserCard = ({user}) => {
   return (
@@ -8,13 +9,14 @@ const UserCard = ({user}) => {
 		<CardHeader>
 			<Flex gap={4}>
 				<Flex flex={"1"} gap={"4"} alignItems={"center"}>
-					<Avatar src={user.imgUrl} />
+					<Avatar src="https://avatar.iran.liara.run/public" />
                         <Box>
 							<Heading size='sm'>{user.name}</Heading>
 							<Text>{user.role}</Text>
 						</Box>
 				</Flex>
 				<Flex>
+                    <EditModal />
 					<IconButton
 						variant='ghost'
 						colorScheme='red'

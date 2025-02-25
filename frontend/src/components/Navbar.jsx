@@ -5,7 +5,7 @@ import { color } from 'framer-motion'
 import React from 'react'
 import CreateUserModel from './CreateUserModel';
 
-const Navbar = () => {
+const Navbar = ({setUsers}) => {
     const { colorMode, toggleColorMode } = useColorMode()
   return (
     <Container maxW={"1000px"}>
@@ -26,7 +26,7 @@ const Navbar = () => {
                     <Button onClick={toggleColorMode}>
                         {colorMode=== "light" ? <IoMoon /> : <LuSun size={20} />}
                     </Button>
-                    <CreateUserModel />
+                    <CreateUserModel setUsers={setUsers} />
                 </Flex>
             </Flex>
         </Box>

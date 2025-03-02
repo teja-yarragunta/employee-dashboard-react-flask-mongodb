@@ -1,81 +1,95 @@
-from app import app, db
+from app import app, mongo
 from flask import request, jsonify
+from bson.objectid import ObjectId
 from models import Employee
 
 # Get all employees
-@app.route("/api/employees", methods = ["GET"])
+@app.route("/api/employees", methods=["GET"])
 def get_employees():
-    employees = Employee.query.all()
-    result = [employee.to_json() for employee in employees]
+    employees = mongo.db.employees.find()
+    result = [Employee.to_json(employee) for employee in employees]
     return jsonify(result)
 
 # Add an employee
-@app.route("/api/employees", methods = ["POST"])
+@app.route("/api/employees", methods=["POST"])
 def add_employee():
     try:
         data = request.json
-        # validations
-        required_fields = ["name","role","description","gender"]
+
+        required_fields = ["name", "role", "description", "gender"]
         for field in required_fields:
             if field not in data or not data.get(field):
-                return jsonify({"error":f'Missing required field: {field}'}), 400
+                return jsonify({"error": f'Missing required field: {field}'}), 400
 
-        name = data.get("name")
-        role = data.get("role")
-        description = data.get("description")
-        gender = data.get("gender")
+        name = data["name"]
+        role = data["role"]
+        description = data["description"]
+        gender = data["gender"]
 
-        #fetch avatar image based on gender
+        img_url = None
         if gender == "male":
             img_url = f"https://avatar.iran.liara.run/public/boy?username={name}"
         elif gender == "female":
-            img_url = f"https://avatar.iran.liara.run/public/girl?username=[value]"
-        else:
-            img_url = None
-        
-        new_employee = Employee(name=name, role=role, description=description, gender=gender, img_url=img_url)
-        db.session.add(new_employee)
-        db.session.commit()
+            img_url = f"https://avatar.iran.liara.run/public/girl?username={name}"
 
-        return jsonify(new_employee.to_json()), 201
-    
+        employee_id = mongo.db.employees.insert_one({
+            "name": name,
+            "role": role,
+            "description": description,
+            "gender": gender,
+            "imgUrl": img_url
+        }).inserted_id
+
+        new_employee = mongo.db.employees.find_one({"_id": employee_id})
+        return jsonify(Employee.to_json(new_employee)), 201
+
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    
+
 # Delete an employee
-@app.route("/api/employees/<int:id>", methods = ["DELETE"])
+@app.route("/api/employees/<id>", methods=["DELETE"])
 def delete_employee(id):
     try:
-        employee = Employee.query.get(id)
-        if employee is None:
-            return jsonify({"error": "employee not found"}), 404
+        print(f"Deleting employee with ID: {id}")  # Log incoming ID
 
-        db.session.delete(employee)
-        db.session.commit()
-        return jsonify({"msg": "employee deleted successfully"}), 200
+        # Validate ID format
+        if not ObjectId.is_valid(id):
+            return jsonify({"error": "Invalid ID format"}), 400
+
+        result = mongo.db.employees.delete_one({"_id": ObjectId(id)})
+        if result.deleted_count == 0:
+            return jsonify({"error": "Employee not found"}), 404
+
+        return jsonify({"msg": "Employee deleted successfully"}), 200
 
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500 
+        return jsonify({"error": str(e)}), 500
+
 
 # Update an employee
-@app.route("/api/employees/<int:id>", methods = ["PATCH"])
+@app.route("/api/employees/<id>", methods=["PATCH"])
 def update_employee(id):
     try:
-        employee = Employee.query.get(id)
-        if employee is None:
-            return jsonify({"error": "employee nor found"}), 404
+        print(f"Updating employee with ID: {id}")  # Log incoming ID
+
+        # Validate ID format
+        if not ObjectId.is_valid(id):
+            return jsonify({"error": "Invalid ID format"}), 400
 
         data = request.json
-        employee.name = data.get("name", employee.name)
-        employee.role = data.get("role", employee.role)
-        employee.description = data.get("description", employee.description)
-        employee.gender = data.get("gender", employee.gender)
+        update_data = {k: v for k, v in data.items() if v is not None}
 
-        db.session.commit()
-        return jsonify(employee.to_json()), 200
+        result = mongo.db.employees.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": update_data}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"error": "Employee not found"}), 404
+
+        updated_employee = mongo.db.employees.find_one({"_id": ObjectId(id)})
+        return jsonify(Employee.to_json(updated_employee)), 200
 
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
+

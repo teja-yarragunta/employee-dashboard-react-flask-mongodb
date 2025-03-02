@@ -106,12 +106,18 @@ const CreateUserModel = ({setUsers}) => {
                 </FormControl>
                 <RadioGroup mt={4}>
                     <Flex gap={5}>
-                        <Radio value='male'
-                            onChange={(e) => setInputs({...inputs, gender: e.target.value})}
-                        >Male</Radio>
-                        <Radio value='female'
-                            onChange={(e) => setInputs({...inputs, gender: e.target.value})}
-                        >Female</Radio>
+                    <Radio value="male"
+                        isChecked={inputs.gender === "male"}
+                        onChange={() => setInputs({ ...inputs, gender: "male" })}
+                        >
+                        Male
+                    </Radio>
+                    <Radio value="female"
+                        isChecked={inputs.gender === "female"}
+                        onChange={() => setInputs({ ...inputs, gender: "female" })}
+                        >
+                        Female
+                    </Radio>
                     </Flex>
                 </RadioGroup>
             </ModalBody>

@@ -26,7 +26,7 @@ const EditModal = ({setUsers, user}) => {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
-			const res = await fetch(BASE_URL + "/employees/" + user.id, {
+			const res = await fetch(BASE_URL + "/employees/" + user._id, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
@@ -37,7 +37,7 @@ const EditModal = ({setUsers, user}) => {
 			if (!res.ok) {
 				throw new Error(data.error);
 			}
-			setUsers((prevUsers) => prevUsers.map((u) => (u.id === user.id ? data : u)));
+			setUsers((prevUsers) => prevUsers.map((u) => (u._id === user._id ? data : u)));
 			toast({
 				status: "success",
 				title: "Updated Successfully",

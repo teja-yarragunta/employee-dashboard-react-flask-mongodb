@@ -27,7 +27,7 @@ const UserGrid = ({users, setUsers}) => {
     <>
       <Grid templateColumns={{base:"1fr", md:"repeat(2, 1fr)", lg:"repeat(3, 1fr)"}} gap={4}>
         {users.map((user) => (
-            <UserCard key={user.id} user={user} setUsers={setUsers} />
+            <UserCard key={user._id} user={user} setUsers={setUsers} />
         ))}
       </Grid>
       {isLoading && (
@@ -38,9 +38,6 @@ const UserGrid = ({users, setUsers}) => {
       {!isLoading && users.length === 0 && (
 				<Flex justifyContent={"center"}>
 					<Text fontSize={"xl"}>
-						<Text as={"span"} fontSize={"2xl"} fontWeight={"bold"} mr={2}>
-							Poor you!🥺
-						</Text>
 						No employees found.
 					</Text>
 				</Flex>

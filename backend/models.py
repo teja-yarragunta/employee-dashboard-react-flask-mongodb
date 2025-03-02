@@ -1,19 +1,13 @@
-from app import db
+from app import mongo
 
-class Employee(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(100), nullable = False)
-    role = db.Column(db.String(100), nullable = False)
-    description = db.Column(db.Text, nullable = False)
-    gender = db.Column(db.String(10), nullable = False)
-    img_url = db.Column(db.String(300), nullable = True)
-
-    def to_json(self):
+class Employee:
+    @staticmethod
+    def to_json(employee):
         return {
-            "id" : self.id,
-            "name" : self.name,
-            "role" : self.role,
-            "description" : self.description,
-            "gender" : self.gender,
-            "imgUrl" : self.img_url
+            "_id": str(employee["_id"]),
+            "name": employee["name"],
+            "role": employee["role"],
+            "description": employee["description"],
+            "gender": employee["gender"],
+            "imgUrl": employee.get("imgUrl")
         }

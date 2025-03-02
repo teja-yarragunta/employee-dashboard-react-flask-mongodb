@@ -9,14 +9,14 @@ const UserCard = ({user, setUsers}) => {
 	const toast = useToast();
 	const handleDeleteUser = async () => {
 		try {
-			const res = await fetch(BASE_URL + "/employees/" + user.id, {
+			const res = await fetch(BASE_URL + "/employees/" + user._id, {
 				method: "DELETE",
 			});
 			const data = await res.json();
 			if (!res.ok) {
 				throw new Error(data.error);
 			}
-			setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+			setUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
 			toast({
 				status: "success",
 				title: "Success",

@@ -22,6 +22,7 @@ employees.db
 
 # Compiled Python files
 *.pyc
+.DS_Store
 
 # Dependency directories
 node_modules/

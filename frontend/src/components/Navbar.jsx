@@ -13,7 +13,7 @@ const Navbar = ({setUsers}) => {
             <Flex h="16" alignItems={"center"} justifyContent={"space-between"}>
                 {/* left side */}
                 <Flex alignItems={"center"} 
-                    justifyContent={"center"} gap={3} display={{base:"none", sm:"flex"}}>
+                    justifyContent={"center"} gap={3}>
                     <Text 
                         fontSize={{ base: "18px", sm: "24px", md: "40px" }} 
                         fontWeight="bold" 

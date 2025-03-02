@@ -14,9 +14,16 @@ const Navbar = ({setUsers}) => {
                 {/* left side */}
                 <Flex alignItems={"center"} 
                     justifyContent={"center"} gap={3} display={{base:"none", sm:"flex"}}>
-                    <Text fontSize={"40px"} >
-                        Employee Dashboard
+                    <Text 
+                        fontSize={{ base: "18px", sm: "24px", md: "40px" }} 
+                        fontWeight="bold" 
+                        whiteSpace="nowrap" 
+                        overflow="hidden" 
+                        textOverflow="ellipsis"
+                    >
+                    Employee Dashboard
                     </Text>
+
                 </Flex>
                 {/* right side */}
                 <Flex gap={3} alignItems={"center"}>
